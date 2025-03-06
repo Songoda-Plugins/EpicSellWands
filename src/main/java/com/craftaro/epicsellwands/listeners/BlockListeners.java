@@ -10,7 +10,6 @@ import com.craftaro.core.third_party.de.tr7zw.nbtapi.NBTItem;
 import com.craftaro.epicsellwands.EpicSellWands;
 import com.craftaro.epicsellwands.settings.Settings;
 import org.apache.commons.lang.WordUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;

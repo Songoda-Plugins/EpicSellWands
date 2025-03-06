@@ -1,13 +1,11 @@
 package com.craftaro.epicsellwands.wand;
 
-import com.craftaro.epicsellwands.listeners.BlockListeners;
 import com.craftaro.epicsellwands.settings.Settings;
 import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.core.third_party.de.tr7zw.nbtapi.NBTItem;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 
-import javax.lang.model.element.Modifier;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;

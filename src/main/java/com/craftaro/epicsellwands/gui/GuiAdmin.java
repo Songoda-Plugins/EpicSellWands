@@ -48,11 +48,13 @@ public class GuiAdmin extends Gui {
 
             ItemMeta meta = item.getItemMeta();
             List<String> lore = meta.getLore();
-
+            if (lore == null) {
+                lore = new ArrayList<>();
+            }
             lore.addAll(Arrays.asList("", TextUtils.formatText("&6Left Click &7to edit"), TextUtils.formatText("&6Right Click &7to take")));
-
             meta.setLore(lore);
             item.setItemMeta(meta);
+
 
             setButton(i + 9, item,
                     (event) -> {

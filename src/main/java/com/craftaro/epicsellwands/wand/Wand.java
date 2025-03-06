@@ -6,6 +6,8 @@ import com.craftaro.core.third_party.de.tr7zw.nbtapi.NBTItem;
 import com.craftaro.core.utils.ItemUtils;
 import com.craftaro.core.utils.TextUtils;
 import com.craftaro.epicsellwands.EpicSellWands;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -35,17 +37,23 @@ public class Wand implements Cloneable {
     }
 
     public ItemStack asItemStack() {
-        ItemStack item = GuiUtils.createButtonItem(type, TextUtils.formatText(name));
+        ItemStack item = GuiUtils.createButtonItem(type, TextUtils.formatText(name), lore.toArray(new String[0]));
+
+        if (item == null || item.getType() == Material.AIR) {
+            return new ItemStack(Material.BARRIER);
+        }
 
         ItemMeta meta = item.getItemMeta();
-        List<String> lore = new ArrayList<>();
-        for (String line : this.lore)
-            lore.add(TextUtils.formatText(line));
-        if (uses != -1)
-            lore.add(EpicSellWands.getInstance().getLocale().getMessage("general.nametag.uses")
-                    .processPlaceholder("uses", Integer.toString(uses)).toText());
-        meta.setLore(lore);
-        item.setItemMeta(meta);
+        if (meta != null) {
+            List<String> lore = new ArrayList<>();
+            for (String line : this.lore)
+                lore.add(TextUtils.formatText(line));
+            if (uses != -1)
+                lore.add(EpicSellWands.getInstance().getLocale().getMessage("general.nametag.uses")
+                        .processPlaceholder("uses", Integer.toString(uses)).toText());
+            meta.setLore(lore);
+            item.setItemMeta(meta);
+        }
 
         if (enchanted)
             ItemUtils.addGlow(item);

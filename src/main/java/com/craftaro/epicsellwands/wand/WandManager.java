@@ -50,7 +50,6 @@ public class WandManager {
 
     public Double getPriceFor(XMaterial material) {
         Double price = registeredPrices.get(material);
-
         if (price == null) {
             Bukkit.getLogger().warning("[EpicSellWands] Price for " + material.name() + " is not defined!");
             return 0.0;
@@ -62,6 +61,7 @@ public class WandManager {
         if ((Settings.PRICE_PLUGIN.getString().equalsIgnoreCase("default"))) {
             return registeredPrices.containsKey(material);
         }
+        //Force true for non Default Price
         return true;
     }
 

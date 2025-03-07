@@ -191,26 +191,29 @@ public class BlockListeners implements Listener {
                     if (shopGUIPlusPrice != null && shopGUIPlusPrice > 0) {
                         return shopGUIPlusPrice;
                     }
-                } catch (NoClassDefFoundError | Exception e) {
-                    plugin.getLogger().warning("ShopGUIPlus pricing error: " + e.getMessage());
-                    return wandManager.getPriceFor(material);
+                } catch (ClassNotFoundException | NoClassDefFoundError e) {
+                    plugin.getLogger().warning("[EpicSellWands] ShopGUIPlus not found.");
+                } catch (Exception e) {
+                    plugin.getLogger().warning("[EpicSellWands] ShopGUIPlus pricing error: " + e.getMessage());
                 }
-
+                break;
             case ECONOMYSHOPGUI:
                 try {
                     Class.forName("me.gypopo.economyshopgui.api.EconomyShopGUIHook");
-                    Double economyShopGUIPrice = EconomyShopGUIHook.getItemSellPrice(player, material.parseItem() );
+                    Double economyShopGUIPrice = EconomyShopGUIHook.getItemSellPrice(player, material.parseItem());
                     if (economyShopGUIPrice != null && economyShopGUIPrice > 0) {
                         return economyShopGUIPrice;
                     }
-                } catch (NoClassDefFoundError | Exception e) {
-                    plugin.getLogger().warning("EconomyShopGUI pricing error: " + e.getMessage());
-                    return wandManager.getPriceFor(material);
+                } catch (ClassNotFoundException | NoClassDefFoundError e) {
+                    plugin.getLogger().warning("[EpicSellWands] EconomyShopGUI not found.");
+                } catch (Exception e) {
+                    plugin.getLogger().warning("[EpicSellWands] EconomyShopGUI pricing error: " + e.getMessage());
                 }
-
+                break;
             default:
                 return wandManager.getPriceFor(material);
         }
+        return wandManager.getPriceFor(material);
     }
 
     private static class SoldItem {

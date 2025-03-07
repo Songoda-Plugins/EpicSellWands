@@ -55,19 +55,20 @@ public class GuiEditWand extends Gui {
                         TextUtils.formatText("&cThe key is the identifier for this"),
                         TextUtils.formatText("&cwand and must be unique!")),
                 (event) -> {
-                        AnvilGui gui = new AnvilGui(event.player, this);
-                        gui.setAction((anvil) -> {
-                            String oldKey = wand.getKey();
-                            wand.setKey(gui.getInputText().trim());
-                            plugin.getWandManager().reKey(oldKey, wand.getKey());
-                            anvil.player.closeInventory();
-                            paint();
-                        });
-                        gui.setTitle("Edit Key");
-                        gui.setInput(GuiUtils.createButtonItem(XMaterial.PAPER,
-                                wand.getKey()));
-                        guiManager.showGUI(event.player, gui);
-                });
+                    AnvilGui gui = new AnvilGui(event.player, this);
+                    gui.setAction((anvil) -> {
+                        String oldKey = wand.getKey();
+                        String newKey = gui.getInputText().trim().replace(" ", "_");
+                        wand.setKey(newKey);
+                        plugin.getWandManager().reKey(oldKey, newKey);
+                        anvil.player.closeInventory();
+                        paint();
+                    });
+                    gui.setTitle("Edit Key");
+                    gui.setInput(GuiUtils.createButtonItem(XMaterial.PAPER, wand.getKey()));
+                    guiManager.showGUI(event.player, gui);
+                }
+        );
 
         setButton(1, 2,
                 GuiUtils.createButtonItem(XMaterial.WRITTEN_BOOK,

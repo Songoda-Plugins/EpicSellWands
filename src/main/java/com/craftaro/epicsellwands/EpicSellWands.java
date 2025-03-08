@@ -85,23 +85,41 @@ public class EpicSellWands extends SongodaPlugin {
     }
 
     private void loadWands() {
-        if (!new File(this.getDataFolder(), "wands.yml").exists())
+        File wandsFile = new File(this.getDataFolder(), "wands.yml");
+        if (!wandsFile.exists()) {
             this.saveResource("wands.yml", false);
-        wandsConfig.load();
+        }
+
+        try {
+            wandsConfig.load(wandsFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
 
         for (String key : wandsConfig.getKeys(false)) {
             ConfigurationSection wand = wandsConfig.getConfigurationSection(key);
-
             if (wand == null) continue;
 
-            wandManager.addWand(new Wand(key, wand.getString("Name"),
-                    XMaterial.matchXMaterial(Material.getMaterial(wand.getString("Type"))))
+            String materialName = wand.getString("Type");
+            Material material = Material.getMaterial(materialName);
+            // Added this check to prevent wand.yml from wiping out all wands.
+            if (material == null) {
+                System.out.println("Invalid material for wand: " + key + " -> " + materialName);
+                continue;
+            }
+            XMaterial xMaterial = XMaterial.matchXMaterial(material);
+            if (xMaterial == null) {
+                System.out.println("XMaterial could not match: " + materialName);
+                continue;
+            }
+            wandManager.addWand(new Wand(key, wand.getString("Name"), xMaterial)
                     .setLore(wand.getStringList("Lore"))
                     .setEnchanted(wand.getBoolean("Enchanted"))
                     .setUses(wand.getInt("Uses"))
-
                     .setRecipeLayout(wand.getString("Recipe-Layout"))
-                    .setRecipeIngredients(wand.getStringList("Recipe-Ingredients")));
+                    .setRecipeIngredients(wand.getStringList("Recipe-Ingredients"))
+            );
         }
     }
 

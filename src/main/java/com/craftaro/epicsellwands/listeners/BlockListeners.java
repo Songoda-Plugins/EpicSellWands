@@ -21,6 +21,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import me.gypopo.economyshopgui.api.EconomyShopGUIHook;
 
 import java.text.NumberFormat;
 import java.util.HashMap;
@@ -35,6 +36,12 @@ public class BlockListeners implements Listener {
         this.plugin = plugin;
         this.playerManager = plugin.getPlayerManager();
         this.wandManager = plugin.getWandManager();
+    }
+
+    public enum PriceSource {
+        DEFAULT,
+        SHOPGUIPLUS,
+        ECONOMYSHOPGUI
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
@@ -91,13 +98,20 @@ public class BlockListeners implements Listener {
                     slot++;
                     continue;
                 }
+
                 // Get the compatible material for this item.
                 XMaterial material = XMaterial.matchXMaterial(chestItem);
 
                 // Is this item sellable?
                 if (wandManager.isSellable(material)) {
-                    // Get the item price.
-                    double singleSale = wandManager.getPriceFor(material);
+                    // Get the item price
+                    Double singleSale = getPriceForItem(material, player);
+
+                    // Check if price is undefined
+                    if (singleSale == null || singleSale == 0) {
+                        slot++;
+                        continue;
+                    }
 
                     // Remove the item from the inventory.
                     inventory.setItem(slot, new ItemStack(Material.AIR));
@@ -116,6 +130,7 @@ public class BlockListeners implements Listener {
                 }
                 slot++;
             }
+
             if (items.isEmpty()) {
                 plugin.getLocale().getMessage("event.use.empty").sendPrefixedMessage(player);
                 return;
@@ -159,6 +174,48 @@ public class BlockListeners implements Listener {
         }
     }
 
+    /**
+     * Fetch price for an item using multiple methods
+     *
+     * @param material The XMaterial of the item
+     * @param player The player selling the item
+     * @return The price of the item
+     */
+    private double getPriceForItem(XMaterial material, Player player) {
+        PriceSource priceSource = PriceSource.valueOf(Settings.PRICE_PLUGIN.getString());
+        switch (priceSource) {
+            case SHOPGUIPLUS:
+                try {
+                    Class.forName("net.brcdev.shopgui.ShopGuiPlusApi");
+                    Double shopGUIPlusPrice = net.brcdev.shopgui.ShopGuiPlusApi.getItemStackPriceSell(player, material.parseItem());
+                    if (shopGUIPlusPrice != null && shopGUIPlusPrice > 0) {
+                        return shopGUIPlusPrice;
+                    }
+                } catch (ClassNotFoundException | NoClassDefFoundError e) {
+                    plugin.getLogger().warning("[EpicSellWands] ShopGUIPlus not found.");
+                } catch (Exception e) {
+                    plugin.getLogger().warning("[EpicSellWands] ShopGUIPlus pricing error: " + e.getMessage());
+                }
+                break;
+            case ECONOMYSHOPGUI:
+                try {
+                    Class.forName("me.gypopo.economyshopgui.api.EconomyShopGUIHook");
+                    Double economyShopGUIPrice = EconomyShopGUIHook.getItemSellPrice(player, material.parseItem());
+                    if (economyShopGUIPrice != null && economyShopGUIPrice > 0) {
+                        return economyShopGUIPrice;
+                    }
+                } catch (ClassNotFoundException | NoClassDefFoundError e) {
+                    plugin.getLogger().warning("[EpicSellWands] EconomyShopGUI not found.");
+                } catch (Exception e) {
+                    plugin.getLogger().warning("[EpicSellWands] EconomyShopGUI pricing error: " + e.getMessage());
+                }
+                break;
+            default:
+                return wandManager.getPriceFor(material);
+        }
+        return wandManager.getPriceFor(material);
+    }
+
     private static class SoldItem {
 
         private final XMaterial material;
@@ -193,5 +250,4 @@ public class BlockListeners implements Listener {
             return this;
         }
     }
-
 }

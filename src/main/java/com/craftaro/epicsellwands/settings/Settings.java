@@ -15,6 +15,10 @@ public class Settings {
             "The amount of time a user must wait before they can",
             "Use a sell wand again.");
 
+    public static final ConfigSetting PRICE_PLUGIN = new ConfigSetting(config,"Price Source",
+            "DEFAULT",
+            "Choose price source for selling items. Options: DEFAULT, SHOPGUIPLUS, ECONOMYSHOPGUI");
+
     public static final ConfigSetting PRICE_MULTIPLIER = new ConfigSetting(config, "General.Price Multiplier", 1.0,
             "The amount all item prices will be multiplied by.");
 

@@ -4,6 +4,7 @@ import com.craftaro.epicsellwands.settings.Settings;
 import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.core.third_party.de.tr7zw.nbtapi.NBTItem;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Collection;
@@ -26,11 +27,25 @@ public class WandManager {
     }
 
     public Wand getWand(ItemStack wandItem) {
+        if (wandItem == null || wandItem.getType() == Material.AIR) return null;
         NBTItem nbtItem = new NBTItem(wandItem);
         if (!nbtItem.hasKey("wand")) return null;
 
-        Wand wand = registeredWands.get(nbtItem.getString("wand")).clone();
-        wand.setUses(nbtItem.getInteger("uses"));
+        String wandKey = nbtItem.getString("wand");
+        Wand baseWand = registeredWands.get(wandKey);
+
+        if (baseWand == null) {
+            Bukkit.getLogger().warning("[EpicSellWands] Wand with key '" + wandKey + "' not found in registeredWands.");
+            return null;
+        }
+
+        Wand wand = baseWand.clone();
+        if (nbtItem.hasKey("uses")) {
+            wand.setUses(nbtItem.getInteger("uses"));
+        }
+        if (nbtItem.hasKey("wandMultiplier")) {
+            wand.setWandMultiplier(nbtItem.getDouble("wandMultiplier"));
+        }
         return wand;
     }
 

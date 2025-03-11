@@ -116,8 +116,7 @@ public class BlockListeners implements Listener {
                     // Remove the item from the inventory.
                     inventory.setItem(slot, new ItemStack(Material.AIR));
 
-                    // Declare the value of the item.
-                    double itemValue = singleSale * chestItem.getAmount() * Settings.PRICE_MULTIPLIER.getDouble();
+                    double itemValue = singleSale * chestItem.getAmount() * Settings.PRICE_MULTIPLIER.getDouble() * wand.getWandMultiplier();
 
                     // Add the price of this item to the total sale.
                     totalSale += itemValue;

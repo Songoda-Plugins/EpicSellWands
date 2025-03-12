@@ -113,10 +113,11 @@ public class EpicSellWands extends SongodaPlugin {
                 System.out.println("XMaterial could not match: " + materialName);
                 continue;
             }
-            wandManager.addWand(new Wand(key, wand.getString("Name"), xMaterial)
+            wandManager.addWand(new Wand(key, wand.getString("Name"), xMaterial, wand.getDouble("Wand-Multiplier"))
                     .setLore(wand.getStringList("Lore"))
                     .setEnchanted(wand.getBoolean("Enchanted"))
                     .setUses(wand.getInt("Uses"))
+                    .setWandMultiplier(wand.getDouble("Wand-Multiplier"))
                     .setRecipeLayout(wand.getString("Recipe-Layout"))
                     .setRecipeIngredients(wand.getStringList("Recipe-Ingredients"))
             );
@@ -138,7 +139,7 @@ public class EpicSellWands extends SongodaPlugin {
             wandsConfig.set(key + ".Lore", wand.getLore());
             wandsConfig.set(key + ".Enchanted", wand.isEnchanted());
             wandsConfig.set(key + ".Uses", wand.getUses());
-
+            wandsConfig.set(key + ".Wand-Multiplier", wand.getWandMultiplier());
             wandsConfig.set(key + ".Recipe-Layout", wand.getRecipeLayout());
             wandsConfig.set(key + ".Recipe-Ingredients", wand.getRecipeIngredients());
         }

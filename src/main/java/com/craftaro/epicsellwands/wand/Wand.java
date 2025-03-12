@@ -26,14 +26,16 @@ public class Wand implements Cloneable {
                     "&7contents."));
     private boolean enchanted = false;
     private int uses = -1;
+    private double wandMultiplier = 1.0;
 
     private String recipeLayout;
     private List<String> recipeIngredients = new ArrayList<>();
 
-    public Wand(String key, String name, XMaterial type) {
+    public Wand(String key, String name, XMaterial type, Double wandMultiplier) {
         this.key = key;
         this.name = name;
         this.type = type;
+        this.wandMultiplier = wandMultiplier;
     }
 
     public ItemStack asItemStack() {
@@ -61,7 +63,17 @@ public class Wand implements Cloneable {
         NBTItem nbtItem = new NBTItem(item);
         nbtItem.setString("wand", key);
         nbtItem.setInteger("uses", uses);
+        nbtItem.setDouble("wandMultiplier", wandMultiplier);
         return nbtItem.getItem();
+    }
+
+    public double getWandMultiplier() {
+        return wandMultiplier;
+    }
+
+    public Wand setWandMultiplier(double wandMultiplier) {
+        this.wandMultiplier = wandMultiplier;
+        return this;
     }
 
     public void setKey(String key) {

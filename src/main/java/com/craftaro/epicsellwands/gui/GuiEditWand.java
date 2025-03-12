@@ -44,6 +44,7 @@ public class GuiEditWand extends Gui {
         setButton(0,8, GuiUtils.createButtonItem(XMaterial.OAK_FENCE_GATE,
                 TextUtils.formatText("&cBack")),
                 (event) -> {
+                    plugin.saveWands();
                     guiManager.showGUI(event.player, returnGui);
                     ((GuiAdmin) returnGui).paint();
                 });
@@ -119,6 +120,28 @@ public class GuiEditWand extends Gui {
                     guiManager.showGUI(event.player, gui);
                 });
 
+        setButton(1, 8, GuiUtils
+                        .createButtonItem(XMaterial.NAME_TAG,
+                                TextUtils.formatText("&bSet wand multiplier"),
+                                "",
+                                TextUtils.formatText("&8Set the multiplier for this wand."),
+                                TextUtils.formatText("&8The multiplier is used to calculate the value of the wand."),
+                                TextUtils.formatText("&8For example, if the multiplier is set to 2.0, the value of the wand will be doubled."),
+                                TextUtils.formatText("&8The default multiplier is 1.0.")
+                        ),
+                (event) -> {
+                    AnvilGui gui = new AnvilGui(event.player, this);
+                    gui.setAction((anvil) -> {
+                        wand.setWandMultiplier(Double.parseDouble(gui.getInputText().trim()));
+                        anvil.player.closeInventory();
+                        paint();
+                    });
+                    gui.setTitle("Edit Wand Multiplier");
+                    gui.setInput(GuiUtils.createButtonItem(XMaterial.PAPER,
+                            String.valueOf(wand.getWandMultiplier())));
+                    guiManager.showGUI(event.player, gui);
+                });
+
         setButton(2, 4, GuiUtils.createButtonItem(XMaterial.BARRIER,
                 TextUtils.formatText("&cDelete"),
                 TextUtils.formatText(Arrays.asList("",
@@ -128,5 +151,6 @@ public class GuiEditWand extends Gui {
             guiManager.showGUI(event.player, returnGui);
             ((GuiAdmin) returnGui).paint();
         });
+
     }
 }

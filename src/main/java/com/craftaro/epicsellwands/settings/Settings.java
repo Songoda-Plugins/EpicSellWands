@@ -1,8 +1,8 @@
 package com.craftaro.epicsellwands.settings;
 
-import com.craftaro.core.configuration.Config;
-import com.craftaro.core.configuration.ConfigSetting;
-import com.craftaro.core.hooks.EconomyManager;
+import com.songoda.core.configuration.Config;
+import com.songoda.core.configuration.ConfigSetting;
+import com.songoda.core.hooks.EconomyManager;
 import com.craftaro.epicsellwands.EpicSellWands;
 
 import java.util.stream.Collectors;
@@ -17,7 +17,8 @@ public class Settings {
 
     public static final ConfigSetting PRICE_PLUGIN = new ConfigSetting(config,"Price Source",
             "DEFAULT",
-            "Choose price source for selling items. Options: DEFAULT, SHOPGUIPLUS, ECONOMYSHOPGUI");
+            "Choose price source for selling items. Options: DEFAULT, SHOPGUIPLUS, ECONOMYSHOPGUI, ESSENTIALS, CMI",
+            "Default: prices.yml ");
 
     public static final ConfigSetting PRICE_MULTIPLIER = new ConfigSetting(config, "General.Price Multiplier", 1.0,
             "The amount all item prices will be multiplied by.");

@@ -1,12 +1,11 @@
 package com.craftaro.epicsellwands.wand;
 
-import com.craftaro.core.gui.GuiUtils;
-import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
-import com.craftaro.core.third_party.de.tr7zw.nbtapi.NBTItem;
-import com.craftaro.core.utils.ItemUtils;
-import com.craftaro.core.utils.TextUtils;
+import com.songoda.core.gui.GuiUtils;
+import com.songoda.third_party.com.cryptomorin.xseries.XMaterial;
+import com.songoda.core.third_party.de.tr7zw.nbtapi.NBTItem;
+import com.songoda.core.utils.ItemUtils;
+import com.songoda.core.utils.TextUtils;
 import com.craftaro.epicsellwands.EpicSellWands;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;

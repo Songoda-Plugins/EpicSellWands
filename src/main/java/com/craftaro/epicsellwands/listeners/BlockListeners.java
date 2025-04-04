@@ -1,15 +1,18 @@
 package com.craftaro.epicsellwands.listeners;
 
-import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
-import com.craftaro.third_party.com.cryptomorin.xseries.XSound;
+import com.Zrips.CMI.CMI;
+import com.earth2me.essentials.IEssentials;
+import com.songoda.third_party.com.cryptomorin.xseries.XMaterial;
+import com.songoda.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.epicsellwands.player.PlayerManager;
 import com.craftaro.epicsellwands.wand.Wand;
 import com.craftaro.epicsellwands.wand.WandManager;
-import com.craftaro.core.hooks.EconomyManager;
-import com.craftaro.core.third_party.de.tr7zw.nbtapi.NBTItem;
+import com.songoda.core.hooks.EconomyManager;
+import com.songoda.core.third_party.de.tr7zw.nbtapi.NBTItem;
 import com.craftaro.epicsellwands.EpicSellWands;
 import com.craftaro.epicsellwands.settings.Settings;
-import org.apache.commons.lang.WordUtils;
+import com.songoda.third_party.org.apache.commons.text.WordUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -22,7 +25,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import me.gypopo.economyshopgui.api.EconomyShopGUIHook;
+import org.bukkit.plugin.Plugin;
 
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.HashMap;
 
@@ -41,7 +46,9 @@ public class BlockListeners implements Listener {
     public enum PriceSource {
         DEFAULT,
         SHOPGUIPLUS,
-        ECONOMYSHOPGUI
+        ECONOMYSHOPGUI,
+        ESSENTIALS,
+        CMI
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
@@ -207,6 +214,42 @@ public class BlockListeners implements Listener {
                     plugin.getLogger().warning("[EpicSellWands] EconomyShopGUI not found.");
                 } catch (Exception e) {
                     plugin.getLogger().warning("[EpicSellWands] EconomyShopGUI pricing error: " + e.getMessage());
+                }
+                break;
+            case ESSENTIALS:
+                try {
+                    Class.forName("com.earth2me.essentials.Essentials");
+                    Plugin essentialsPlugin = Bukkit.getPluginManager().getPlugin("Essentials");
+                    if (essentialsPlugin instanceof IEssentials) {
+                        IEssentials ess = (IEssentials) essentialsPlugin;
+                        ItemStack itemStack = material.parseItem();
+
+                        BigDecimal essentialsPrice = ess.getWorth().getPrice(ess, itemStack);
+                        if (essentialsPrice != null && essentialsPrice.signum() >= 0) {
+                            return essentialsPrice.doubleValue();
+                        }
+                    }
+                } catch (ClassNotFoundException | NoClassDefFoundError e) {
+                    plugin.getLogger().warning("[EpicSellWands] Essentials not found.");
+                } catch (Exception e) {
+                    plugin.getLogger().warning("[EpicSellWands] Essentials pricing error: " + e.getMessage());
+                }
+                break;
+            case CMI:
+                try {
+                    Class.forName("com.Zrips.CMI.CMI");
+                    Plugin cmiPlugin = Bukkit.getPluginManager().getPlugin("CMI");
+                    if (cmiPlugin != null) {
+                        ItemStack itemStack = material.parseItem();
+                        double cmiPrice = CMI.getInstance().getWorthManager().getWorth(itemStack).getSellPrice();
+                        if (cmiPrice != 0.0 && cmiPrice > 0.0) {
+                            return cmiPrice;
+                        }
+                    }
+                } catch (ClassNotFoundException | NoClassDefFoundError e) {
+                    plugin.getLogger().warning("[EpicSellWands] CMI not found.");
+                } catch (Exception e) {
+                    plugin.getLogger().warning("[EpicSellWands] CMI pricing error: " + e.getMessage());
                 }
                 break;
             default:

@@ -1,9 +1,9 @@
 name: EpicSellWands
 version: maven-version-number
 description: EpicSellWands
-author: Craftaro
+author: Songoda
 main: com.craftaro.epicsellwands.EpicSellWands
-softdepend: [Vault, ModdedCore]
+softdepend: [Vault, EssenitalsX, ShopGUIPlus, EconomyShopGUI, CMI]
 api-version: 1.13
 
 commands:

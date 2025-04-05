@@ -1,11 +1,11 @@
-package com.craftaro.epicsellwands.wand;
+package com.songoda.epicsellwands.wand;
 
 import com.songoda.core.gui.GuiUtils;
 import com.songoda.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.core.third_party.de.tr7zw.nbtapi.NBTItem;
 import com.songoda.core.utils.ItemUtils;
 import com.songoda.core.utils.TextUtils;
-import com.craftaro.epicsellwands.EpicSellWands;
+import com.songoda.epicsellwands.EpicSellWands;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;

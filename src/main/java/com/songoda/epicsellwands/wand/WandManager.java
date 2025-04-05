@@ -1,6 +1,6 @@
-package com.craftaro.epicsellwands.wand;
+package com.songoda.epicsellwands.wand;
 
-import com.craftaro.epicsellwands.settings.Settings;
+import com.songoda.epicsellwands.settings.Settings;
 import com.songoda.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.core.third_party.de.tr7zw.nbtapi.NBTItem;
 import org.bukkit.Bukkit;

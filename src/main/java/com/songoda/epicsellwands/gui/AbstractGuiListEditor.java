@@ -1,7 +1,7 @@
-package com.craftaro.epicsellwands.gui;
+package com.songoda.epicsellwands.gui;
 
 import com.songoda.third_party.com.cryptomorin.xseries.XMaterial;
-import com.craftaro.epicsellwands.wand.Wand;
+import com.songoda.epicsellwands.wand.Wand;
 import com.songoda.core.gui.AnvilGui;
 import com.songoda.core.gui.Gui;
 import com.songoda.core.gui.GuiUtils;

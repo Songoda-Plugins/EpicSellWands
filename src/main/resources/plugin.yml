@@ -2,7 +2,7 @@ name: EpicSellWands
 version: maven-version-number
 description: EpicSellWands
 author: Songoda
-main: com.craftaro.epicsellwands.EpicSellWands
+main: com.songoda.epicsellwands.EpicSellWands
 softdepend: [Vault, EssenitalsX, ShopGUIPlus, EconomyShopGUI, CMI]
 api-version: 1.13
 

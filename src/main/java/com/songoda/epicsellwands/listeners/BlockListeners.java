@@ -1,16 +1,16 @@
-package com.craftaro.epicsellwands.listeners;
+package com.songoda.epicsellwands.listeners;
 
 import com.Zrips.CMI.CMI;
 import com.earth2me.essentials.IEssentials;
 import com.songoda.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.third_party.com.cryptomorin.xseries.XSound;
-import com.craftaro.epicsellwands.player.PlayerManager;
-import com.craftaro.epicsellwands.wand.Wand;
-import com.craftaro.epicsellwands.wand.WandManager;
+import com.songoda.epicsellwands.player.PlayerManager;
+import com.songoda.epicsellwands.wand.Wand;
+import com.songoda.epicsellwands.wand.WandManager;
 import com.songoda.core.hooks.EconomyManager;
 import com.songoda.core.third_party.de.tr7zw.nbtapi.NBTItem;
-import com.craftaro.epicsellwands.EpicSellWands;
-import com.craftaro.epicsellwands.settings.Settings;
+import com.songoda.epicsellwands.EpicSellWands;
+import com.songoda.epicsellwands.settings.Settings;
 import com.songoda.third_party.org.apache.commons.text.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

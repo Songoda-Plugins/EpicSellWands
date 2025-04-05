@@ -1,4 +1,4 @@
-package com.craftaro.epicsellwands;
+package com.songoda.epicsellwands;
 
 import com.songoda.core.SongodaCore;
 import com.songoda.core.SongodaPlugin;
@@ -6,14 +6,14 @@ import com.songoda.core.commands.CommandManager;
 import com.songoda.core.configuration.Config;
 import com.songoda.core.gui.GuiManager;
 import com.songoda.core.hooks.EconomyManager;
-import com.craftaro.epicsellwands.commands.CommandAdmin;
-import com.craftaro.epicsellwands.commands.CommandGive;
-import com.craftaro.epicsellwands.commands.CommandReload;
-import com.craftaro.epicsellwands.listeners.BlockListeners;
-import com.craftaro.epicsellwands.player.PlayerManager;
-import com.craftaro.epicsellwands.settings.Settings;
-import com.craftaro.epicsellwands.wand.Wand;
-import com.craftaro.epicsellwands.wand.WandManager;
+import com.songoda.epicsellwands.commands.CommandAdmin;
+import com.songoda.epicsellwands.commands.CommandGive;
+import com.songoda.epicsellwands.commands.CommandReload;
+import com.songoda.epicsellwands.listeners.BlockListeners;
+import com.songoda.epicsellwands.player.PlayerManager;
+import com.songoda.epicsellwands.settings.Settings;
+import com.songoda.epicsellwands.wand.Wand;
+import com.songoda.epicsellwands.wand.WandManager;
 import com.songoda.third_party.com.cryptomorin.xseries.XMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

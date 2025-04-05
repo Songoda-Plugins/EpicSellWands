@@ -1,6 +1,6 @@
-package com.craftaro.epicsellwands.gui;
+package com.songoda.epicsellwands.gui;
 
-import com.craftaro.epicsellwands.wand.Wand;
+import com.songoda.epicsellwands.wand.Wand;
 import com.songoda.core.gui.Gui;
 
 import java.util.ArrayList;

@@ -1,6 +1,6 @@
-package com.craftaro.epicsellwands.player;
+package com.songoda.epicsellwands.player;
 
-import com.craftaro.epicsellwands.settings.Settings;
+import com.songoda.epicsellwands.settings.Settings;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;

@@ -1,8 +1,8 @@
-package com.craftaro.epicsellwands.commands;
+package com.songoda.epicsellwands.commands;
 
 import com.songoda.core.commands.AbstractCommand;
-import com.craftaro.epicsellwands.EpicSellWands;
-import com.craftaro.epicsellwands.gui.GuiAdmin;
+import com.songoda.epicsellwands.EpicSellWands;
+import com.songoda.epicsellwands.gui.GuiAdmin;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

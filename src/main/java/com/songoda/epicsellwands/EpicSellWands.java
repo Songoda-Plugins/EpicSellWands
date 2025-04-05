@@ -1,20 +1,20 @@
-package com.craftaro.epicsellwands;
+package com.songoda.epicsellwands;
 
-import com.craftaro.core.SongodaCore;
-import com.craftaro.core.SongodaPlugin;
-import com.craftaro.core.commands.CommandManager;
-import com.craftaro.core.configuration.Config;
-import com.craftaro.core.gui.GuiManager;
-import com.craftaro.core.hooks.EconomyManager;
-import com.craftaro.epicsellwands.commands.CommandAdmin;
-import com.craftaro.epicsellwands.commands.CommandGive;
-import com.craftaro.epicsellwands.commands.CommandReload;
-import com.craftaro.epicsellwands.listeners.BlockListeners;
-import com.craftaro.epicsellwands.player.PlayerManager;
-import com.craftaro.epicsellwands.settings.Settings;
-import com.craftaro.epicsellwands.wand.Wand;
-import com.craftaro.epicsellwands.wand.WandManager;
-import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
+import com.songoda.core.SongodaCore;
+import com.songoda.core.SongodaPlugin;
+import com.songoda.core.commands.CommandManager;
+import com.songoda.core.configuration.Config;
+import com.songoda.core.gui.GuiManager;
+import com.songoda.core.hooks.EconomyManager;
+import com.songoda.epicsellwands.commands.CommandAdmin;
+import com.songoda.epicsellwands.commands.CommandGive;
+import com.songoda.epicsellwands.commands.CommandReload;
+import com.songoda.epicsellwands.listeners.BlockListeners;
+import com.songoda.epicsellwands.player.PlayerManager;
+import com.songoda.epicsellwands.settings.Settings;
+import com.songoda.epicsellwands.wand.Wand;
+import com.songoda.epicsellwands.wand.WandManager;
+import com.songoda.third_party.com.cryptomorin.xseries.XMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -85,23 +85,42 @@ public class EpicSellWands extends SongodaPlugin {
     }
 
     private void loadWands() {
-        if (!new File(this.getDataFolder(), "wands.yml").exists())
+        File wandsFile = new File(this.getDataFolder(), "wands.yml");
+        if (!wandsFile.exists()) {
             this.saveResource("wands.yml", false);
-        wandsConfig.load();
+        }
+
+        try {
+            wandsConfig.load(wandsFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
 
         for (String key : wandsConfig.getKeys(false)) {
             ConfigurationSection wand = wandsConfig.getConfigurationSection(key);
-
             if (wand == null) continue;
 
-            wandManager.addWand(new Wand(key, wand.getString("Name"),
-                    XMaterial.matchXMaterial(Material.getMaterial(wand.getString("Type"))))
+            String materialName = wand.getString("Type");
+            Material material = Material.getMaterial(materialName);
+            // Added this check to prevent wand.yml from wiping out all wands.
+            if (material == null) {
+                System.out.println("Invalid material for wand: " + key + " -> " + materialName);
+                continue;
+            }
+            XMaterial xMaterial = XMaterial.matchXMaterial(material);
+            if (xMaterial == null) {
+                System.out.println("XMaterial could not match: " + materialName);
+                continue;
+            }
+            wandManager.addWand(new Wand(key, wand.getString("Name"), xMaterial, wand.getDouble("Wand-Multiplier"))
                     .setLore(wand.getStringList("Lore"))
                     .setEnchanted(wand.getBoolean("Enchanted"))
                     .setUses(wand.getInt("Uses"))
-
+                    .setWandMultiplier(wand.getDouble("Wand-Multiplier"))
                     .setRecipeLayout(wand.getString("Recipe-Layout"))
-                    .setRecipeIngredients(wand.getStringList("Recipe-Ingredients")));
+                    .setRecipeIngredients(wand.getStringList("Recipe-Ingredients"))
+            );
         }
     }
 
@@ -120,54 +139,12 @@ public class EpicSellWands extends SongodaPlugin {
             wandsConfig.set(key + ".Lore", wand.getLore());
             wandsConfig.set(key + ".Enchanted", wand.isEnchanted());
             wandsConfig.set(key + ".Uses", wand.getUses());
-
+            wandsConfig.set(key + ".Wand-Multiplier", wand.getWandMultiplier());
             wandsConfig.set(key + ".Recipe-Layout", wand.getRecipeLayout());
             wandsConfig.set(key + ".Recipe-Ingredients", wand.getRecipeIngredients());
         }
         wandsConfig.saveChanges();
     }
-
-    /* As ModdedCore repo was deleted, this strings now doesn't make any sense
-    private void setupRecipes() {
-        com.songoda.moddedcore.ModdedCore moddedCore = com.craftaro.moddedcore.ModdedCore.getInstance();
-        com.songoda.moddedcore.items.ItemManager itemManager = moddedCore.getItemManager();
-        for (Wand wand : wandManager.getWands()) {
-
-            String recipe = wand.getRecipeLayout();
-
-            if (recipe.length() != 9) continue;
-
-            if (wand.getRecipeIngredients().isEmpty()) continue;
-
-            Map<String, String> ingredients = new HashMap<>();
-
-            for (String ingredient : wand.getRecipeIngredients()) {
-                if (!ingredient.contains(",")) continue;
-                String[] s = ingredient.split(",");
-                String letter = s[0].trim();
-                String item = s[1].trim();
-                ingredients.put(letter, item);
-            }
-
-            List<ItemStack> items = new ArrayList<>();
-
-            for (int i = 0; i < 9; i++) {
-                String symbol = String.valueOf(recipe.charAt(i));
-                String item = ingredients.get(symbol);
-
-                com.craftaro.moddedcore.items.ModdedItem moddedItem = itemManager.getItem(item);
-                if (moddedItem == null) {
-                    items.add(CompatibleMaterial.getMaterial(item).getItem());
-                } else {
-                    items.add(moddedItem.asItemStack());
-                }
-            }
-
-            getLogger().info("Added ModdedCore recipe for: " + wand.getKey());
-            itemManager.addItem(new com.songoda.moddedcore.items.ModdedItem(this, wand.getKey(), wand.asItemStack(), itemManager.getCategory("TOOLS")));
-        }
-        moddedCore.getRecipeManager().loadFromFile(this);
-    }*/
 
     @Override
     public void onConfigReload() {

@@ -1,11 +1,12 @@
-package com.craftaro.epicsellwands.wand;
+package com.songoda.epicsellwands.wand;
 
-import com.craftaro.core.gui.GuiUtils;
-import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
-import com.craftaro.core.third_party.de.tr7zw.nbtapi.NBTItem;
-import com.craftaro.core.utils.ItemUtils;
-import com.craftaro.core.utils.TextUtils;
-import com.craftaro.epicsellwands.EpicSellWands;
+import com.songoda.core.gui.GuiUtils;
+import com.songoda.third_party.com.cryptomorin.xseries.XMaterial;
+import com.songoda.core.third_party.de.tr7zw.nbtapi.NBTItem;
+import com.songoda.core.utils.ItemUtils;
+import com.songoda.core.utils.TextUtils;
+import com.songoda.epicsellwands.EpicSellWands;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -24,28 +25,36 @@ public class Wand implements Cloneable {
                     "&7contents."));
     private boolean enchanted = false;
     private int uses = -1;
+    private double wandMultiplier = 1.0;
 
     private String recipeLayout;
     private List<String> recipeIngredients = new ArrayList<>();
 
-    public Wand(String key, String name, XMaterial type) {
+    public Wand(String key, String name, XMaterial type, Double wandMultiplier) {
         this.key = key;
         this.name = name;
         this.type = type;
+        this.wandMultiplier = wandMultiplier;
     }
 
     public ItemStack asItemStack() {
-        ItemStack item = GuiUtils.createButtonItem(type, TextUtils.formatText(name));
+        ItemStack item = GuiUtils.createButtonItem(type, TextUtils.formatText(name), lore.toArray(new String[0]));
+
+        if (item == null || item.getType() == Material.AIR) {
+            return new ItemStack(Material.BARRIER);
+        }
 
         ItemMeta meta = item.getItemMeta();
-        List<String> lore = new ArrayList<>();
-        for (String line : this.lore)
-            lore.add(TextUtils.formatText(line));
-        if (uses != -1)
-            lore.add(EpicSellWands.getInstance().getLocale().getMessage("general.nametag.uses")
-                    .processPlaceholder("uses", Integer.toString(uses)).toText());
-        meta.setLore(lore);
-        item.setItemMeta(meta);
+        if (meta != null) {
+            List<String> lore = new ArrayList<>();
+            for (String line : this.lore)
+                lore.add(TextUtils.formatText(line));
+            if (uses != -1)
+                lore.add(EpicSellWands.getInstance().getLocale().getMessage("general.nametag.uses")
+                        .processPlaceholder("uses", Integer.toString(uses)).toText());
+            meta.setLore(lore);
+            item.setItemMeta(meta);
+        }
 
         if (enchanted)
             ItemUtils.addGlow(item);
@@ -53,7 +62,17 @@ public class Wand implements Cloneable {
         NBTItem nbtItem = new NBTItem(item);
         nbtItem.setString("wand", key);
         nbtItem.setInteger("uses", uses);
+        nbtItem.setDouble("wandMultiplier", wandMultiplier);
         return nbtItem.getItem();
+    }
+
+    public double getWandMultiplier() {
+        return wandMultiplier;
+    }
+
+    public Wand setWandMultiplier(double wandMultiplier) {
+        this.wandMultiplier = wandMultiplier;
+        return this;
     }
 
     public void setKey(String key) {

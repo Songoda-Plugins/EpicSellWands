@@ -1,27 +1,36 @@
 WOODEN_WAND:
-  Name: '&eWooden Sell-Wand'
-  Type: 'WOODEN_HOE'
+  Name: "&eWooden Sell-Wand"
+  Type: "WOODEN_HOE"
   Lore:
     - '&7Right-click a chest with'
     - '&7this wand to sell it''s'
     - '&7contents.'
   Enchanted: false
-  Uses: 300
+  Uses: 1000
+  Recipe-Ingredients: [ ]
+  Wand-Multiplier: 1.0
+
 IRON_WAND:
-  Name: '&7Iron Sell-Wand'
-  Type: 'IRON_HOE'
+  Name: "&eIron Sell-Wand"
+  Type: "IRON_HOE"
   Lore:
     - '&7Right-click a chest with'
     - '&7this wand to sell it''s'
     - '&7contents.'
   Enchanted: false
-  Uses: 800
+  Uses: 1000
+  Recipe-Ingredients: [ ]
+  Wand-Multiplier: 1.0
+
 DIAMOND_WAND:
-  Name: '&bDiamond Sell-Wand'
-  Type: 'DIAMOND_HOE'
+  Name: "&eDiamond Sell-Wand"
+  Type: "DIAMOND_HOE"
   Lore:
     - '&7Right-click a chest with'
     - '&7this wand to sell it''s'
     - '&7contents.'
-  Enchanted: true
-  Uses: 1500
+  Enchanted: false
+  Uses: 1000
+  Recipe-Ingredients: [ ]
+  Wand-Multiplier: 1.0
+  

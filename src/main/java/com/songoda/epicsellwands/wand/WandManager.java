@@ -1,7 +1,10 @@
-package com.craftaro.epicsellwands.wand;
+package com.songoda.epicsellwands.wand;
 
-import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
-import com.craftaro.core.third_party.de.tr7zw.nbtapi.NBTItem;
+import com.songoda.epicsellwands.settings.Settings;
+import com.songoda.third_party.com.cryptomorin.xseries.XMaterial;
+import com.songoda.core.third_party.de.tr7zw.nbtapi.NBTItem;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Collection;
@@ -24,11 +27,25 @@ public class WandManager {
     }
 
     public Wand getWand(ItemStack wandItem) {
+        if (wandItem == null || wandItem.getType() == Material.AIR) return null;
         NBTItem nbtItem = new NBTItem(wandItem);
         if (!nbtItem.hasKey("wand")) return null;
 
-        Wand wand = registeredWands.get(nbtItem.getString("wand")).clone();
-        wand.setUses(nbtItem.getInteger("uses"));
+        String wandKey = nbtItem.getString("wand");
+        Wand baseWand = registeredWands.get(wandKey);
+
+        if (baseWand == null) {
+            Bukkit.getLogger().warning("[EpicSellWands] Wand with key '" + wandKey + "' not found in registeredWands.");
+            return null;
+        }
+
+        Wand wand = baseWand.clone();
+        if (nbtItem.hasKey("uses")) {
+            wand.setUses(nbtItem.getInteger("uses"));
+        }
+        if (nbtItem.hasKey("wandMultiplier")) {
+            wand.setWandMultiplier(nbtItem.getDouble("wandMultiplier"));
+        }
         return wand;
     }
 
@@ -46,12 +63,21 @@ public class WandManager {
         registeredPrices.put(material, price);
     }
 
-    public double getPriceFor(XMaterial material) {
-        return registeredPrices.get(material);
+    public Double getPriceFor(XMaterial material) {
+        Double price = registeredPrices.get(material);
+        if (price == null) {
+            Bukkit.getLogger().warning("[EpicSellWands] Price for " + material.name() + " is not defined!");
+            return 0.0;
+        }
+        return price;
     }
 
     public boolean isSellable(XMaterial material) {
-        return registeredPrices.containsKey(material);
+        if ((Settings.PRICE_PLUGIN.getString().equalsIgnoreCase("default"))) {
+            return registeredPrices.containsKey(material);
+        }
+        //Force true for non Default Price
+        return true;
     }
 
     public Collection<Wand> getWands() {

@@ -1,7 +1,7 @@
-package com.craftaro.epicsellwands.commands;
+package com.songoda.epicsellwands.commands;
 
-import com.craftaro.core.commands.AbstractCommand;
-import com.craftaro.epicsellwands.EpicSellWands;
+import com.songoda.core.commands.AbstractCommand;
+import com.songoda.epicsellwands.EpicSellWands;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;

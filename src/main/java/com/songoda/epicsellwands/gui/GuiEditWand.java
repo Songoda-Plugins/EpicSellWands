@@ -1,12 +1,12 @@
-package com.craftaro.epicsellwands.gui;
+package com.songoda.epicsellwands.gui;
 
-import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
-import com.craftaro.epicsellwands.wand.Wand;
-import com.craftaro.core.gui.AnvilGui;
-import com.craftaro.core.gui.Gui;
-import com.craftaro.core.gui.GuiUtils;
-import com.craftaro.core.utils.TextUtils;
-import com.craftaro.epicsellwands.EpicSellWands;
+import com.songoda.third_party.com.cryptomorin.xseries.XMaterial;
+import com.songoda.epicsellwands.wand.Wand;
+import com.songoda.core.gui.AnvilGui;
+import com.songoda.core.gui.Gui;
+import com.songoda.core.gui.GuiUtils;
+import com.songoda.core.utils.TextUtils;
+import com.songoda.epicsellwands.EpicSellWands;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
@@ -44,6 +44,7 @@ public class GuiEditWand extends Gui {
         setButton(0,8, GuiUtils.createButtonItem(XMaterial.OAK_FENCE_GATE,
                 TextUtils.formatText("&cBack")),
                 (event) -> {
+                    plugin.saveWands();
                     guiManager.showGUI(event.player, returnGui);
                     ((GuiAdmin) returnGui).paint();
                 });
@@ -55,19 +56,20 @@ public class GuiEditWand extends Gui {
                         TextUtils.formatText("&cThe key is the identifier for this"),
                         TextUtils.formatText("&cwand and must be unique!")),
                 (event) -> {
-                        AnvilGui gui = new AnvilGui(event.player, this);
-                        gui.setAction((anvil) -> {
-                            String oldKey = wand.getKey();
-                            wand.setKey(gui.getInputText().trim());
-                            plugin.getWandManager().reKey(oldKey, wand.getKey());
-                            anvil.player.closeInventory();
-                            paint();
-                        });
-                        gui.setTitle("Edit Key");
-                        gui.setInput(GuiUtils.createButtonItem(XMaterial.PAPER,
-                                wand.getKey()));
-                        guiManager.showGUI(event.player, gui);
-                });
+                    AnvilGui gui = new AnvilGui(event.player, this);
+                    gui.setAction((anvil) -> {
+                        String oldKey = wand.getKey();
+                        String newKey = gui.getInputText().trim().replace(" ", "_");
+                        wand.setKey(newKey);
+                        plugin.getWandManager().reKey(oldKey, newKey);
+                        anvil.player.closeInventory();
+                        paint();
+                    });
+                    gui.setTitle("Edit Key");
+                    gui.setInput(GuiUtils.createButtonItem(XMaterial.PAPER, wand.getKey()));
+                    guiManager.showGUI(event.player, gui);
+                }
+        );
 
         setButton(1, 2,
                 GuiUtils.createButtonItem(XMaterial.WRITTEN_BOOK,
@@ -118,6 +120,28 @@ public class GuiEditWand extends Gui {
                     guiManager.showGUI(event.player, gui);
                 });
 
+        setButton(1, 8, GuiUtils
+                        .createButtonItem(XMaterial.NAME_TAG,
+                                TextUtils.formatText("&bSet wand multiplier"),
+                                "",
+                                TextUtils.formatText("&8Set the multiplier for this wand."),
+                                TextUtils.formatText("&8The multiplier is used to calculate the value of the wand."),
+                                TextUtils.formatText("&8For example, if the multiplier is set to 2.0, the value of the wand will be doubled."),
+                                TextUtils.formatText("&8The default multiplier is 1.0.")
+                        ),
+                (event) -> {
+                    AnvilGui gui = new AnvilGui(event.player, this);
+                    gui.setAction((anvil) -> {
+                        wand.setWandMultiplier(Double.parseDouble(gui.getInputText().trim()));
+                        anvil.player.closeInventory();
+                        paint();
+                    });
+                    gui.setTitle("Edit Wand Multiplier");
+                    gui.setInput(GuiUtils.createButtonItem(XMaterial.PAPER,
+                            String.valueOf(wand.getWandMultiplier())));
+                    guiManager.showGUI(event.player, gui);
+                });
+
         setButton(2, 4, GuiUtils.createButtonItem(XMaterial.BARRIER,
                 TextUtils.formatText("&cDelete"),
                 TextUtils.formatText(Arrays.asList("",
@@ -127,5 +151,6 @@ public class GuiEditWand extends Gui {
             guiManager.showGUI(event.player, returnGui);
             ((GuiAdmin) returnGui).paint();
         });
+
     }
 }
